@@ -2,26 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
-
-interface ProposalData {
-  id: string;
-  area: string;
-  plant: string;
-  name: string;
-  email: string;
-}
+import { createProposal, updateProposal, type Proposal } from "@/lib/services/agroService";
 
 interface ProposalFormProps {
-  initialData: ProposalData | null;
-  userId: string;
+  initialData: Proposal | null;
 }
 
-export function ProposalForm({ initialData, userId }: ProposalFormProps) {
+export function ProposalForm({ initialData }: ProposalFormProps) {
   const router = useRouter();
   const isEditing = !!initialData;
 
@@ -35,24 +26,16 @@ export function ProposalForm({ initialData, userId }: ProposalFormProps) {
     e.preventDefault();
     setLoading(true);
 
-    const supabase = createClient();
-
     try {
-      if (isEditing) {
-        const { error } = await supabase
-          .from("agro")
-          .update({ area, plant, name, email })
-          .eq("id", initialData.id)
-          .eq("user_id", userId);
+      const data = { area, plant, name, email };
 
-        if (error) throw error;
+      if (isEditing) {
+        const result = await updateProposal(initialData.id, data);
+        if (!result.success) throw new Error(result.error);
         toast.success("Proposal updated successfully");
       } else {
-        const { error } = await supabase
-          .from("agro")
-          .insert({ area, plant, name, email, user_id: userId });
-
-        if (error) throw error;
+        const result = await createProposal(data);
+        if (!result.success) throw new Error(result.error);
         toast.success("Proposal added successfully");
       }
 

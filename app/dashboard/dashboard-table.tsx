@@ -1,18 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-
-interface Proposal {
-  id: string;
-  area: string;
-  plant: string;
-  name: string;
-  email: string;
-  created_at: string;
-}
+import { deleteProposal, type Proposal } from "@/lib/services/agroService";
 
 interface DashboardTableProps {
   proposals: Proposal[];
@@ -30,15 +21,10 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
       return;
     }
 
-    const supabase = createClient();
+    const result = await deleteProposal(id);
 
-    const { error } = await supabase
-      .from("agro")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      toast.error("Failed to delete proposal");
+    if (!result.success) {
+      toast.error(result.error || "Failed to delete proposal");
       return;
     }
 

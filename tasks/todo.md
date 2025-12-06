@@ -29,7 +29,41 @@ Table: `agro` with columns:
 - Edit navigates to New Proposal with pre-filled form (via query params)
 - User must create Supabase table manually
 
-## Review
+## Phase 2: Service Layer Refactoring
+
+### Tasks
+
+- [x] 1. Create `lib/services/agroService.ts` with CRUD functions
+- [x] 2. Update `proposal-form.tsx` to use service for insert/update
+- [x] 3. Update `dashboard-table.tsx` to use service for delete
+- [x] 4. Update `dashboard/page.tsx` to use service for fetching proposals
+- [x] 5. Update `new-proposal/page.tsx` to use service for fetching single proposal
+- [x] 6. Test build passes
+
+### Phase 2 Review
+
+**Created `lib/services/agroService.ts`** - Server-side service with:
+- `getProposalsByUser()` - fetch all user proposals
+- `getProposalById()` - fetch single proposal for edit
+- `createProposal()` - Server Action for insert
+- `updateProposal()` - Server Action for update
+- `deleteProposal()` - Server Action for delete
+
+**Updated components:**
+- `proposal-form.tsx` - removed client Supabase, calls `createProposal`/`updateProposal` Server Actions
+- `dashboard-table.tsx` - removed client Supabase, calls `deleteProposal` Server Action
+- `dashboard/page.tsx` - uses `getProposalsByUser()` service
+- `new-proposal/page.tsx` - uses `getProposalById()` service, removed `userId` prop
+
+**Benefits:**
+- All database operations are server-side only (more secure)
+- No client Supabase imports in components
+- Centralized data access logic
+- Reusable service functions
+
+---
+
+## Phase 1 Review
 
 ### Changes Made
 
