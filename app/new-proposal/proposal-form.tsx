@@ -107,7 +107,7 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
         <Label htmlFor="area">Area</Label>
         <Input

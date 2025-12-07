@@ -14,8 +14,8 @@ export default async function DashboardPage() {
   const proposals = await getProposalsByUser(user.id);
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4">Dashboard</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
       <DashboardTable proposals={proposals} />
     </div>
   );

@@ -1,9 +1,9 @@
-export default function Loader(){
+export default function Loader() {
   return (
-    <div id="loader" className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
     </div>
-    );
-};
+  );
+}

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
@@ -22,12 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Toaster />
-        <NavBar />
-        {children}
-        <Footer />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Toaster />
+          <NavBar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

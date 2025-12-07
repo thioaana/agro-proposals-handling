@@ -62,8 +62,8 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
 
   if (proposals.length === 0) {
     return (
-      <div className="text-center py-5">
-        <p className="text-muted">No proposals yet.</p>
+      <div className="text-center py-12">
+        <p className="text-muted-foreground mb-4">No proposals yet.</p>
         <Button onClick={() => router.push("/new-proposal")}>
           Create your first proposal
         </Button>
@@ -72,43 +72,50 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
   }
 
   return (
-    <div className="table-responsive">
-      <table className="table table-striped table-hover">
-        <thead className="table-dark">
+    <div className="overflow-x-auto rounded-lg border border-border">
+      <table className="w-full">
+        <thead className="bg-primary text-primary-foreground">
           <tr>
-            <th>Area</th>
-            <th>Plant</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Date</th>
-            <th>PDF</th>
-            <th>Actions</th>
+            <th className="px-4 py-3 text-left font-semibold">Area</th>
+            <th className="px-4 py-3 text-left font-semibold">Plant</th>
+            <th className="px-4 py-3 text-left font-semibold">Name</th>
+            <th className="px-4 py-3 text-left font-semibold">Email</th>
+            <th className="px-4 py-3 text-left font-semibold">Date</th>
+            <th className="px-4 py-3 text-left font-semibold">PDF</th>
+            <th className="px-4 py-3 text-left font-semibold">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {proposals.map((proposal) => (
-            <tr key={proposal.id}>
-              <td>{proposal.area}</td>
-              <td>{proposal.plant}</td>
-              <td>{proposal.name}</td>
-              <td>{proposal.email}</td>
-              <td>{new Date(proposal.created_at).toLocaleDateString()}</td>
-              <td>
+        <tbody className="bg-card text-card-foreground">
+          {proposals.map((proposal, index) => (
+            <tr
+              key={proposal.id}
+              className={`border-b border-border hover:bg-muted/50 transition-colors ${
+                index % 2 === 0 ? "bg-card" : "bg-muted/30"
+              }`}
+            >
+              <td className="px-4 py-3">{proposal.area}</td>
+              <td className="px-4 py-3">{proposal.plant}</td>
+              <td className="px-4 py-3">{proposal.name}</td>
+              <td className="px-4 py-3">{proposal.email}</td>
+              <td className="px-4 py-3">
+                {new Date(proposal.created_at).toLocaleDateString()}
+              </td>
+              <td className="px-4 py-3">
                 {proposal.pdf_url && isValidPdfUrl(proposal.pdf_url) ? (
                   <a
                     href={proposal.pdf_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-sm btn-outline-primary"
+                    className="text-primary hover:text-primary/80 underline font-medium transition-colors"
                   >
                     Download
                   </a>
                 ) : (
-                  <span className="text-muted">-</span>
+                  <span className="text-muted-foreground">-</span>
                 )}
               </td>
-              <td>
-                <div className="d-flex gap-2">
+              <td className="px-4 py-3">
+                <div className="flex gap-2">
                   <Button
                     size="sm"
                     variant="outline"

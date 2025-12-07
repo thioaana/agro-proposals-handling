@@ -1,51 +1,49 @@
 // app/page.tsx
 
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-[calc(100vh-140px)]">
+      <div className="max-w-7xl mx-auto px-4 text-center py-12">
+        {/* Hero Section */}
+        <header className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Welcome to Agro Proposal
+          </h1>
+          <p className="text-lg text-muted-foreground mb-6">
+            A powerful Next.js application with Supabase integration
+          </p>
+          <Link href="/new-proposal">
+            <Button size="lg" className="text-lg px-8">
+              Get Started
+            </Button>
+          </Link>
+        </header>
 
-        {/* <NavBar /> */}
-
-        <div className="container text-center py-5">
-            {/* <!-- Hero Section --> */}
-            <header className="mb-5">
-              <h1 className="display-4 fw-bold">Welcome to Agro Proposal</h1>
-              <p className="lead">A powerful Next.js application with Supabase integration</p>
-
-              <button className="btn btn-primary btn-lg">Get Started</button>
-            </header>
-
-            {/* <!-- Features Section --> */}
-            <section className="row g-4">
-              <div className="col-md-4">
-                  <div className="card shadow-sm">
-                      <div className="card-body">
-                          <h5 className="card-title">Fast & Secure</h5>
-                          <p className="card-text">Create and Update New Farmers Proposals</p>
-                      </div>
-                  </div>
-              </div>
-              <div className="col-md-4">
-                  <div className="card shadow-sm">
-                      <div className="card-body">
-                          <h5 className="card-title">Authentication</h5>
-                          <p className="card-text">Seamless user authentication with e-mail and password.</p>
-                      </div>
-                  </div>
-              </div>
-              <div className="col-md-4">
-                  <div className="card shadow-sm">
-                      <div className="card-body">
-                          <h5 className="card-title">Database & Storage</h5>
-                          <p className="card-text">Presents full table of Proposals in DB</p>
-                      </div>
-                  </div>
-              </div>
-            </section>
-        </div>
-
-        {/* <Footer /> */}
-    
+        {/* Features Section */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-card text-card-foreground rounded-lg shadow-md p-6 border border-border">
+            <h3 className="text-xl font-semibold mb-2">Fast & Secure</h3>
+            <p className="text-muted-foreground">
+              Create and Update New Farmers Proposals
+            </p>
+          </div>
+          <div className="bg-card text-card-foreground rounded-lg shadow-md p-6 border border-border">
+            <h3 className="text-xl font-semibold mb-2">Authentication</h3>
+            <p className="text-muted-foreground">
+              Seamless user authentication with e-mail and password.
+            </p>
+          </div>
+          <div className="bg-card text-card-foreground rounded-lg shadow-md p-6 border border-border">
+            <h3 className="text-xl font-semibold mb-2">Database & Storage</h3>
+            <p className="text-muted-foreground">
+              Presents full table of Proposals in DB
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
