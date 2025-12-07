@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { createProposal, updateProposal, type Proposal } from "@/lib/services/agroService";
+import { generateProposalPdf } from "@/lib/utils/generatePdf";
 
 interface ProposalFormProps {
   initialData: Proposal | null;
@@ -38,6 +39,9 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
         if (!result.success) throw new Error(result.error);
         toast.success("Proposal added successfully");
       }
+
+      // Generate and download PDF
+      await generateProposalPdf(data);
 
       window.location.href = "/dashboard";
     } catch (error) {

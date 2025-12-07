@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { LogoutButton } from "@/components/logout-button";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,8 @@ export function NavBarClient({ isLoggedIn }: NavBarClientProps) {
 
   return (
     <nav className="navbar navbar-expand-md navbar-dark px-3" style={{ backgroundColor: "#343a40" }}>
-      <Link href="/" className="navbar-brand fw-bold">
+      <Link href="/" className="navbar-brand fw-bold d-flex align-items-center gap-2">
+        <Image src="/logo.png" alt="Agro Logo" width={32} height={32} />
         Agro
       </Link>
 
