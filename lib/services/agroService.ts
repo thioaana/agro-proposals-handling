@@ -9,6 +9,7 @@ export interface Proposal {
   name: string;
   email: string;
   created_at: string;
+  pdf_url: string | null;
 }
 
 export interface ProposalInput {
@@ -16,6 +17,7 @@ export interface ProposalInput {
   plant: string;
   name: string;
   email: string;
+  pdf_url?: string;
 }
 
 // Read operations (for server components)

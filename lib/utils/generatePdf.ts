@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
 
-interface ProposalData {
+export interface ProposalData {
   area: string;
   plant: string;
   name: string;
@@ -18,7 +18,7 @@ async function loadImageAsBase64(url: string): Promise<string> {
   });
 }
 
-export async function generateProposalPdf(data: ProposalData): Promise<void> {
+export async function generateProposalPdf(data: ProposalData): Promise<Blob> {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -105,7 +105,11 @@ export async function generateProposalPdf(data: ProposalData): Promise<void> {
     { align: "center" }
   );
 
-  // Download the PDF
-  const fileName = `proposal_${data.name.replace(/\s+/g, "_")}_${Date.now()}.pdf`;
-  doc.save(fileName);
+  // Return PDF as Blob
+  return doc.output("blob");
+}
+
+// Helper to generate filename
+export function generatePdfFileName(name: string): string {
+  return `proposal_${name.replace(/\s+/g, "_")}_${Date.now()}.pdf`;
 }

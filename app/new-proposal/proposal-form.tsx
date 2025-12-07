@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { createProposal, updateProposal, type Proposal } from "@/lib/services/agroService";
-import { generateProposalPdf } from "@/lib/utils/generatePdf";
+import { generateProposalPdf, generatePdfFileName } from "@/lib/utils/generatePdf";
+import { uploadPdfToStorage, updatePdfInStorage } from "@/lib/services/storageService";
 
 interface ProposalFormProps {
   initialData: Proposal | null;
@@ -28,20 +29,49 @@ export function ProposalForm({ initialData }: ProposalFormProps) {
     setLoading(true);
 
     try {
-      const data = { area, plant, name, email };
+      const formData = { area, plant, name, email };
+
+      // Generate PDF as Blob
+      const pdfBlob = await generateProposalPdf(formData);
+      const fileName = generatePdfFileName(name);
+
+      console.log("PDF Blob size:", (pdfBlob.size / 1024).toFixed(2), "KB");
+
+      // Convert Blob to base64 for server upload
+      const reader = new FileReader();
+      const pdfBase64 = await new Promise<string>((resolve, reject) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(pdfBlob);
+      });
+
+      let pdfUrl: string | undefined;
 
       if (isEditing) {
-        const result = await updateProposal(initialData.id, data);
+        // Update PDF in storage (delete old, upload new)
+        const uploadResult = await updatePdfInStorage(
+          pdfBase64,
+          fileName,
+          initialData.pdf_url
+        );
+        if (!uploadResult.success) throw new Error(uploadResult.error);
+        pdfUrl = uploadResult.url;
+
+        // Update proposal with new PDF URL
+        const result = await updateProposal(initialData.id, { ...formData, pdf_url: pdfUrl });
         if (!result.success) throw new Error(result.error);
         toast.success("Proposal updated successfully");
       } else {
-        const result = await createProposal(data);
+        // Upload PDF to storage
+        const uploadResult = await uploadPdfToStorage(pdfBase64, fileName);
+        if (!uploadResult.success) throw new Error(uploadResult.error);
+        pdfUrl = uploadResult.url;
+
+        // Create proposal with PDF URL
+        const result = await createProposal({ ...formData, pdf_url: pdfUrl });
         if (!result.success) throw new Error(result.error);
         toast.success("Proposal added successfully");
       }
-
-      // Generate and download PDF
-      await generateProposalPdf(data);
 
       window.location.href = "/dashboard";
     } catch (error) {

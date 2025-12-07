@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { deleteProposal, type Proposal } from "@/lib/services/agroService";
+import { deletePdfFromStorage } from "@/lib/services/storageService";
 
 interface DashboardTableProps {
   proposals: Proposal[];
@@ -17,7 +18,7 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
     router.push(`/new-proposal?id=${id}`);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, pdfUrl: string | null) => {
     const confirmation = await Swal.fire({
       title: "Delete proposal?",
       text: "This action cannot be undone.",
@@ -31,6 +32,11 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
 
     if (!confirmation.isConfirmed) {
       return;
+    }
+
+    // Delete PDF from storage if exists
+    if (pdfUrl) {
+      await deletePdfFromStorage(pdfUrl);
     }
 
     const result = await deleteProposal(id);
@@ -65,6 +71,7 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
             <th>Name</th>
             <th>Email</th>
             <th>Date</th>
+            <th>PDF</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -77,6 +84,20 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
               <td>{proposal.email}</td>
               <td>{new Date(proposal.created_at).toLocaleDateString()}</td>
               <td>
+                {proposal.pdf_url ? (
+                  <a
+                    href={proposal.pdf_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-sm btn-outline-primary"
+                  >
+                    Download
+                  </a>
+                ) : (
+                  <span className="text-muted">-</span>
+                )}
+              </td>
+              <td>
                 <div className="d-flex gap-2">
                   <Button
                     size="sm"
@@ -88,7 +109,7 @@ export function DashboardTable({ proposals }: DashboardTableProps) {
                   <Button
                     size="sm"
                     variant="destructive"
-                    onClick={() => handleDelete(proposal.id)}
+                    onClick={() => handleDelete(proposal.id, proposal.pdf_url)}
                   >
                     Delete
                   </Button>
